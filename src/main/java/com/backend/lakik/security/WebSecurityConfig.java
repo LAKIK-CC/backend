@@ -23,7 +23,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     http.cors().and().csrf().disable().authorizeRequests()
       //  .antMatchers("/v1/user/all").hasAuthority("ADMIN") to manage authorization
-       .antMatchers("/v1/user/register").hasAuthority("PEMILIK_KOS")
+       .antMatchers("/v1/user/register").hasAuthority("ADMIN")
         .anyRequest().permitAll().and()
         .addFilter(new AuthenticationFilter(authenticationManager(), getApplicationContext()))
         .addFilter(new AuthorizationFilter(authenticationManager()))
