@@ -20,12 +20,13 @@ public class UserRestServiceImpl implements UserRestService {
 
     @Override
     public UserModel createUser(String username, String namaLengkap, String email, String password, RoleModel role) {        
-        UserModel user = new UserModel();
-        user.setUsername(username);
-        user.setNamaLengkap(namaLengkap);
-        user.setEmail(email);
-        user.setPassword(PasswordEncoder.encode(password));
-        user.setRole(role);
+        UserModel user = UserModel.builder()
+            .username(username)
+            .email(email)
+            .namaLengkap(namaLengkap)
+            .password(PasswordEncoder.encode(password))
+            .role(role)
+            .build();
         return userDb.save(user);
     }
 

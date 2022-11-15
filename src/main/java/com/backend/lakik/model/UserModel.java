@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 @Table(name= "users")
+@JsonIgnoreProperties(value = { "password" }, allowSetters = true)
 public class UserModel implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
