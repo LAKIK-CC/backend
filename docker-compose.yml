@@ -1,0 +1,39 @@
+version: '3'
+services:
+  database-lakik:
+    image: postgres:14.5-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: lakik
+    ports:
+      - "5432:5432"
+    volumes:
+      - data:/var/lib/postgresql/data
+    networks:
+      - backend
+  backend-lakik:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: database-lakik
+      DB_NAME: lakik
+      DB_PASSWORD: postgres
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+    restart: unless-stopped
+    depends_on:
+      - database-lakik
+    networks:
+      - backend
+    ports:
+      - "8080:8080"
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  data:
