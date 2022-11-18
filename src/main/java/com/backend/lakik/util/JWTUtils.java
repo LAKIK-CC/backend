@@ -18,7 +18,6 @@ public class JWTUtils {
                 .withClaim("sub", user.getUsername())
                 .withClaim("id", user.getIdUser())
                 .withClaim("role", user.getRole().getNamaRole())
-                .withClaim("nama", user.getNamaLengkap())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 15 * 60 * 1000))
                 .sign(algorithm);
     }
@@ -28,7 +27,6 @@ public class JWTUtils {
                 .withClaim("sub", user.getUsername())
                 .withClaim("id", user.getIdUser())
                 .withClaim("role", user.getRole().getNamaRole())
-                .withClaim("nama", user.getNamaLengkap())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 7 * 24 * 60 * 1000))
                 .sign(algorithm);
     }

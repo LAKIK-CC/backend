@@ -42,7 +42,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 		try {
 			UserModel temp = new ObjectMapper().readValue(req.getInputStream(), UserModel.class);
 			Optional<UserModel> optUser = userDb.findByUsername(temp.getUsername());
-
+      
 			UserModel applicationUser = optUser.get();
 			applicationUser.setPassword(temp.getPassword());
 			Set<GrantedAuthority> grantedAuthorities = new HashSet<GrantedAuthority>();
