@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface KamarDb extends JpaRepository<KamarModel, Long> {
+  List<KamarModel> findAllByUserModel(String username, Sort sort);
 }

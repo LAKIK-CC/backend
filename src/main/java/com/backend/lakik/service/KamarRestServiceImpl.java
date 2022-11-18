@@ -40,5 +40,21 @@ public class KamarRestServiceImpl implements KamarRestService {
 
         return kamarFound;
     }
+
+    @Override
+    public List<KamarModel> readKamar(String username) {
+        return kamarRepository
+            .findAllByUserModel(username, Sort.by(Sort.Direction.ASC, "noKamar")));;
+    }
+
+    @Override
+    public void deleteKamar(String idKamar) {
+      var kamarFoundOptional = kamarRepository.findById(idKamar);
+      if(kamarFoundOptional.isEmpty()) {
+        throw new IllegalStateException("Kamar not found");
+      }
+      kamarRepository.deleteById(idKamar);
+      return true;
+    }
 }
 
