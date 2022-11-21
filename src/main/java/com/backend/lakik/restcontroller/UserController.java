@@ -30,7 +30,7 @@ public class UserController {
     @Autowired
     private RoleRestService roleRestService;
 
-    @PostMapping("/register")
+    @PostMapping(value = "/register", produces = "application/json")
     public BaseResponse<UserModel> register(@Valid @RequestBody RegisterRequest userData, BindingResult bindingResult) throws ParseException {
         if (bindingResult.hasFieldErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Request Body has invalid type or missing field");

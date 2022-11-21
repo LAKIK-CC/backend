@@ -23,7 +23,7 @@ public class TokenController {
     @Autowired
     private UserRestService userRestService;
     
-    @GetMapping("/refresh")
+    @GetMapping(value = "/refresh", produces = "application/json")
     public BaseResponse<String> refreshAccessToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader("Authorization");
         if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {

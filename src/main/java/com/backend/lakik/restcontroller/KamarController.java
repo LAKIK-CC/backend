@@ -38,7 +38,7 @@ public class KamarController {
         try {
             var updatedKamar = kamarRestService.updateKamar(idKamar, kamar);
             return BaseResponse.<KamarModel>builder()
-                    .status(HttpStatus.ACCEPTED.value())
+                    .status(HttpStatus.OK.value())
                     .message("success")
                     .result(updatedKamar)
                     .build();
@@ -59,7 +59,7 @@ public class KamarController {
 
         var Kamars = kamarRestService.readKamar(username);
         return BaseResponse.<List<KamarModel>>builder()
-                .status(HttpStatus.ACCEPTED.value())
+                .status(HttpStatus.OK.value())
                 .message("success")
                 .result(Kamars)
                 .build();
@@ -70,7 +70,7 @@ public class KamarController {
         try {
             kamarRestService.deleteKamar(idKamar);
             return BaseResponse.<String>builder()
-                .status(HttpStatus.ACCEPTED.value())
+                .status(HttpStatus.OK.value())
                 .message("success")
                 .result(null)
                 .build();
