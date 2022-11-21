@@ -17,7 +17,7 @@ public class KamarController {
     @Autowired
     private KamarRestService kamarRestService;
 
-    @PostMapping
+    @PostMapping(produces = "application/json")
     public BaseResponse<KamarModel> createKamar(@RequestBody KamarModel kamar,
                                     @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader){
         var decodedJWT = JWTUtils.decodeJWTToken(authHeader);
@@ -32,7 +32,7 @@ public class KamarController {
                     .build();
     }
 
-    @PutMapping("/{idKamar}")
+    @PutMapping(value = "/{idKamar}", produces = "application/json")
     public BaseResponse<KamarModel> updateKamar(@PathVariable(value = "idKamar") Long idKamar,
                                                 @RequestBody KamarModel kamar) {
         try {
@@ -51,8 +51,12 @@ public class KamarController {
         }
     }
 
-    @GetMapping("/")
-    public BaseResponse<List<KamarModel>> readKamar(@RequestParam String username) {
+    @GetMapping(produces = "application/json")
+    public BaseResponse<List<KamarModel>> readKamar(
+        @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
+        var decodedJWT = JWTUtils.decodeJWTToken(authHeader);
+        var username = decodedJWT.getSubject();
+
         var Kamars = kamarRestService.readKamar(username);
         return BaseResponse.<List<KamarModel>>builder()
                 .status(HttpStatus.ACCEPTED.value())
@@ -61,7 +65,7 @@ public class KamarController {
                 .build();
     }
 
-    @DeleteMapping("/{idKamar}")
+    @DeleteMapping(value = "/{idKamar}", produces = "application/json")
     public BaseResponse<String> deleteKamar(@PathVariable(value = "idKamar") Long idKamar) {
         try {
             kamarRestService.deleteKamar(idKamar);
