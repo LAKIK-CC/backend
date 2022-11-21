@@ -45,8 +45,9 @@ public class KamarRestServiceImpl implements KamarRestService {
 
     @Override
     public List<KamarModel> readKamar(String username) {
+        var kos = kosService.getUserByUsername(username);
         return kamarRepository
-            .findAllByUserModel(username, Sort.by(Sort.Direction.ASC, "noKamar"));
+            .findAllByUserModel(kos, Sort.by(Sort.Direction.ASC, "noKamar"));
     }
 
     @Override

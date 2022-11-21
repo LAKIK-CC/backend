@@ -9,6 +9,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/v1/kamar")
 public class KamarController {
@@ -47,6 +49,33 @@ public class KamarController {
                     .result(null)
                     .message("not found").build();
         }
+    }
 
+    @GetMapping("/")
+    public BaseResponse<List<KamarModel>> readKamar(@RequestParam String username) {
+        var Kamars = kamarRestService.readKamar(username);
+        return BaseResponse.<List<KamarModel>>builder()
+                .status(HttpStatus.ACCEPTED.value())
+                .message("success")
+                .result(Kamars)
+                .build();
+    }
+
+    @DeleteMapping("/{idKamar}")
+    public BaseResponse<String> deleteKamar(@PathVariable(value = "idKamar") Long idKamar) {
+        try {
+            kamarRestService.deleteKamar(idKamar);
+            return BaseResponse.<String>builder()
+                .status(HttpStatus.ACCEPTED.value())
+                .message("success")
+                .result(null)
+                .build();
+
+        } catch(IllegalStateException exception) {
+            return BaseResponse.<String>builder()
+                .status(HttpStatus.NOT_FOUND.value())
+                .result(null)
+                .message("not found").build();
+        }
     }
 }
