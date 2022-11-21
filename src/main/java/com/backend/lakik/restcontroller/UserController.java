@@ -37,13 +37,8 @@ public class UserController {
         } else {
             try {
                 RoleModel role = roleRestService.getRoleByRoleName(userData.getRole());
-                UserModel user = userRestService.createUser(
-                    userData.getUsername(),
-                    userData.getNamaLengkap(),
-                    userData.getEmail(),
-                    userData.getPassword(),
-                    role
-                );
+                UserModel user = userRestService.createUser(userData,role);
+                
                 return BaseResponse.<UserModel>builder()
                     .status(200)
                     .message("success")
