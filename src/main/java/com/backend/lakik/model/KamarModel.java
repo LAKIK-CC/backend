@@ -16,17 +16,24 @@ public class KamarModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+
     @NotNull
     @Column(name = "no_kamar")
     String noKamar;
+
     // Note: Implement Fasilitas as another model
     @Column(name = "wc_dalam")
     boolean wcDalam;
+
     boolean ac;
+
     @Column(name = "spring_bed")
     boolean springBed;
+
     boolean listrik;
+
     boolean tersedia;
+
     @Column(name = "keterangan", columnDefinition = "TEXT")
     String keterangan;
 

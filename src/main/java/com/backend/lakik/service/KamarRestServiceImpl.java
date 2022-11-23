@@ -3,9 +3,11 @@ package com.backend.lakik.service;
 import com.backend.lakik.model.KamarModel;
 import com.backend.lakik.repository.KamarDb;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -39,6 +41,22 @@ public class KamarRestServiceImpl implements KamarRestService {
         kamarFound.setKeterangan(kamar.getKeterangan());
 
         return kamarFound;
+    }
+
+    @Override
+    public List<KamarModel> readKamar(String username) {
+        var kos = kosService.getUserByUsername(username);
+        return kamarRepository
+            .findAllByUserModel(kos, Sort.by(Sort.Direction.ASC, "noKamar"));
+    }
+
+    @Override
+    public void deleteKamar(Long idKamar) {
+      var kamarFoundOptional = kamarRepository.findById(idKamar);
+      if(kamarFoundOptional.isEmpty()) {
+        throw new IllegalStateException("Kamar not found");
+      }
+      kamarRepository.deleteById(idKamar);
     }
 }
 
