@@ -48,13 +48,13 @@ public class UserController {
             } catch (DataIntegrityViolationException e){
                 return BaseResponse.<UserModel>builder()
                     .status(400)
-                    .message("Username telah terdaftar")
+                    .message(e.getMessage())
                     .result(null)
                     .build();
             } catch (Exception e) {
                 return BaseResponse.<UserModel>builder()
                     .status(500)
-                    .message(e.toString())
+                    .message(e.getMessage())
                     .result(null)
                     .build();
             }

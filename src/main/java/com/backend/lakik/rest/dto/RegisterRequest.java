@@ -18,15 +18,15 @@ public class RegisterRequest {
     @JsonProperty("role")
     private String role;
 
-    @JsonProperty("nama_kos")
+    @JsonProperty("namaKos")
     private String namaKos;
 
-    @JsonProperty("nomor_telepon_kos")
+    @JsonProperty("nomorTeleponKos")
     private String nomorTeleponKos;
 
-    @JsonProperty("alamat_kos")
+    @JsonProperty("alamatKos")
     private String alamatKos;
 
-    @JsonProperty("deskripsi_kos")
+    @JsonProperty("deskripsiKos")
     private String deskripsiKos;
 }
