@@ -5,6 +5,8 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Builder
 @Getter
@@ -12,6 +14,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name= "kamar")
+@JsonIgnoreProperties(value={ "user" }, allowSetters= true)
 public class KamarModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +40,4 @@ public class KamarModel {
     @Column(name = "keterangan", columnDefinition = "TEXT")
     String keterangan;
 
-    @ManyToOne
-    @JoinColumn(name = "user_model_id_user")
-    private UserModel userModel;
 }

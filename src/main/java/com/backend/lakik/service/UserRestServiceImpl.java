@@ -1,5 +1,7 @@
 package com.backend.lakik.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -7,6 +9,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.backend.lakik.model.KamarModel;
 import com.backend.lakik.model.RoleModel;
 import com.backend.lakik.model.UserModel;
 import com.backend.lakik.repository.UserDb;
@@ -32,6 +35,7 @@ public class UserRestServiceImpl implements UserRestService {
             .deskripsiKos(userData.getDeskripsiKos())
             .namaKos(userData.getNamaKos())
             .nomorTeleponKos(userData.getNomorTeleponKos())
+            .listKamar(new ArrayList<KamarModel>())
             .build();
         
         return userDb.save(user);
@@ -44,5 +48,20 @@ public class UserRestServiceImpl implements UserRestService {
             return user.get();
         }
         return null;
+    }
+
+    @Override
+    public void addKamar(String username, KamarModel kamar) {
+        UserModel user = getUserByUsername(username);
+        List<KamarModel> tempListKamar = user.getListKamar();
+        tempListKamar.add(kamar);
+        user.setListKamar(tempListKamar);
+        userDb.save(user);
+    }
+
+    @Override
+    public List<KamarModel> getAllUserKamar(String username) {
+        UserModel user = getUserByUsername(username);
+        return user.getListKamar();
     }
 }
