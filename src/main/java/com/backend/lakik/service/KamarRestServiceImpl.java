@@ -2,6 +2,9 @@ package com.backend.lakik.service;
 
 import com.backend.lakik.model.KamarModel;
 import com.backend.lakik.repository.KamarDb;
+
+import lombok.var;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,15 @@ public class KamarRestServiceImpl implements KamarRestService {
 
     @Autowired
     private KamarDb kamarRepository;
+
+    @Override
+    public KamarModel getKamar(Long idKamar) {
+        var kamar = kamarRepository.findById(idKamar);
+        if (kamar.isPresent()) {
+            return kamar.get();
+        }
+        return null;
+    }
 
     @Override
     public KamarModel createKamar(KamarModel kamar) {

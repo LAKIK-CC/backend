@@ -57,7 +57,7 @@ public class KamarController {
     }
 
     @GetMapping(produces = "application/json")
-    public BaseResponse<UserModel> readKamar(
+    public BaseResponse<UserModel> readAllKamar(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
         var decodedJWT = JWTUtils.decodeJWTToken(authHeader);
         var username = decodedJWT.getSubject();
@@ -67,6 +67,15 @@ public class KamarController {
                 .status(HttpStatus.OK.value())
                 .message("success")
                 .result(user)
+                .build();
+    }
+
+    @GetMapping(value = "/{idKamar}", produces = "application/json")
+    public BaseResponse<KamarModel> readKamar(@PathVariable(value = "idKamar") Long idKamar) {
+        return BaseResponse.<KamarModel>builder()
+                .status(HttpStatus.OK.value())
+                .message("success")
+                .result(kamarRestService.getKamar(idKamar))
                 .build();
     }
 
