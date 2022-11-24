@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @NoArgsConstructor
 @Table(name= "kamar")
 @JsonIgnoreProperties(value={ "user" }, allowSetters= true)
-public class KamarModel {
+public class KamarModel implements Comparable<KamarModel>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -40,4 +40,8 @@ public class KamarModel {
     @Column(name = "keterangan", columnDefinition = "TEXT")
     String keterangan;
 
+    @Override
+    public int compareTo(KamarModel u) {
+        return this.getNoKamar().compareTo(u.getNoKamar());
+    }
 }

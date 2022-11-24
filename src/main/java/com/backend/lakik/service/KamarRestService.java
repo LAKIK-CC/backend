@@ -8,6 +8,4 @@ public interface KamarRestService {
     KamarModel createKamar(KamarModel kamar);
 
     KamarModel updateKamar(Long idKamar, KamarModel kamar);
-
-    void deleteKamar(Long idKamar);
 }

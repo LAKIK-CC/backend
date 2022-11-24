@@ -1,6 +1,8 @@
 package com.backend.lakik.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,8 +57,16 @@ public class UserRestServiceImpl implements UserRestService {
         UserModel user = getUserByUsername(username);
         List<KamarModel> tempListKamar = user.getListKamar();
         tempListKamar.add(kamar);
+        Collections.sort(tempListKamar);
         user.setListKamar(tempListKamar);
         userDb.save(user);
+    }
+
+    @Override
+    public void removeKamar(String username, KamarModel kamar) {
+        UserModel user = getUserByUsername(username);
+        List<KamarModel> tempListKamar = user.getListKamar();
+        tempListKamar.remove(kamar);
     }
 
     @Override

@@ -3,8 +3,6 @@ package com.backend.lakik.service;
 import com.backend.lakik.model.KamarModel;
 import com.backend.lakik.repository.KamarDb;
 
-import lombok.var;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +17,7 @@ public class KamarRestServiceImpl implements KamarRestService {
 
     @Override
     public KamarModel getKamar(Long idKamar) {
-        var kamar = kamarRepository.findById(idKamar);
-        if (kamar.isPresent()) {
-            return kamar.get();
-        }
-        return null;
+        return kamarRepository.findById(idKamar).orElseGet(() -> null);
     }
 
     @Override
@@ -48,15 +42,6 @@ public class KamarRestServiceImpl implements KamarRestService {
         kamarFound.setKeterangan(kamar.getKeterangan());
 
         return kamarFound;
-    }
-
-    @Override
-    public void deleteKamar(Long idKamar) {
-      var kamarFoundOptional = kamarRepository.findById(idKamar);
-      if(kamarFoundOptional.isEmpty()) {
-        throw new IllegalStateException("Kamar not found");
-      }
-      kamarRepository.deleteById(idKamar);
     }
 }
 

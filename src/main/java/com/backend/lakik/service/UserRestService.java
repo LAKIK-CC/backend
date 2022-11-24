@@ -11,5 +11,6 @@ public interface UserRestService {
     UserModel createUser(RegisterRequest userData, RoleModel role);
     UserModel getUserByUsername(String username);
     void addKamar(String username, KamarModel kamar);
+    void removeKamar(String username, KamarModel kamar);
     List<KamarModel> getAllUserKamar(String username);
 }

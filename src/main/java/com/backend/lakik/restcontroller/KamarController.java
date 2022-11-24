@@ -80,9 +80,15 @@ public class KamarController {
     }
 
     @DeleteMapping(value = "/{idKamar}", produces = "application/json")
-    public BaseResponse<String> deleteKamar(@PathVariable(value = "idKamar") Long idKamar) {
+    public BaseResponse<String> deleteKamar(
+        @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
+        @PathVariable(value = "idKamar") Long idKamar) {
         try {
-            kamarRestService.deleteKamar(idKamar);
+            var decodedJWT = JWTUtils.decodeJWTToken(authHeader);
+            var username = decodedJWT.getSubject();
+            KamarModel kamar = kamarRestService.getKamar(idKamar);
+
+            userRestService.removeKamar(username, kamar);
             return BaseResponse.<String>builder()
                     .status(HttpStatus.OK.value())
                     .message("success")

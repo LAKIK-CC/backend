@@ -3,6 +3,7 @@ package com.backend.lakik.model;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -71,6 +72,6 @@ public class UserModel implements Serializable{
     @JsonIgnore
     private RoleModel role;
 
-    @OneToMany
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<KamarModel> listKamar;
 }
