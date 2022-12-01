@@ -1,0 +1,19 @@
+steps:
+- id: 'build image'
+  name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'asia-southeast1-docker.pkg.dev/$PROJECT_ID/lakik-repo/lakik-backend:$SHORT_SHA', '.']
+
+- id: 'tag image'
+  name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'tag',
+    'asia-southeast1-docker.pkg.dev/$PROJECT_ID/lakik-repo/lakik-backend:$SHORT_SHA',
+    'asia-southeast1-docker.pkg.dev/$PROJECT_ID/lakik-repo/lakik-backend:latest'
+  ]
+
+- id: 'push image'
+  name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'asia-southeast1-docker.pkg.dev/$PROJECT_ID/lakik-repo/lakik-backend:$SHORT_SHA']
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'asia-southeast1-docker.pkg.dev/$PROJECT_ID/lakik-repo/lakik-backend:latest']
