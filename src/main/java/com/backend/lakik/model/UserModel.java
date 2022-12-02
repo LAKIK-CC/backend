@@ -51,7 +51,7 @@ public class UserModel implements Serializable{
 
     @NotNull
     @Size(max = 50)
-    @Column(name = "nama_kos", nullable = false, unique = true)
+    @Column(name = "nama_kos", nullable = false, unique = false)
     private String namaKos;
 
     @NotNull
