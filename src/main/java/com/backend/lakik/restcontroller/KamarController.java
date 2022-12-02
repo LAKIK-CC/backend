@@ -26,6 +26,17 @@ public class KamarController {
         var decodedJWT = JWTUtils.decodeJWTToken(authHeader);
         var username = decodedJWT.getSubject();
 
+        var user = userRestService.getUserByUsername(username);
+        var isVerified = kamarRestService.verifyKamar(user, kamar.getNoKamar());
+
+        if (!isVerified) {
+            return BaseResponse.<KamarModel>builder()
+                .status(HttpStatus.UNPROCESSABLE_ENTITY.value())
+                .message("nomor kamar telah terdaftar")
+                .result(null)
+                .build();
+        }
+
         var createdKamar = kamarRestService.createKamar(kamar);
 
         userRestService.addKamar(username, createdKamar);

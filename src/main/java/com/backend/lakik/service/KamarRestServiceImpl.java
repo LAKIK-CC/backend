@@ -1,6 +1,7 @@
 package com.backend.lakik.service;
 
 import com.backend.lakik.model.KamarModel;
+import com.backend.lakik.model.UserModel;
 import com.backend.lakik.repository.KamarDb;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,16 @@ public class KamarRestServiceImpl implements KamarRestService {
         kamarFound.setKeterangan(kamar.getKeterangan());
 
         return kamarFound;
+    }
+
+    @Override
+    public Boolean verifyKamar(UserModel user, String noKamar) {
+        for (KamarModel kamar : user.getListKamar()) {
+            if (kamar.getNoKamar().equals(noKamar)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 
