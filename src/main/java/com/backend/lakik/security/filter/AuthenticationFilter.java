@@ -22,10 +22,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     UserDb userDb;
@@ -42,13 +41,24 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 		try {
 			UserModel temp = new ObjectMapper().readValue(req.getInputStream(), UserModel.class);
 			Optional<UserModel> optUser = userDb.findByUsername(temp.getUsername());
-      
-			UserModel applicationUser = optUser.get();
-			applicationUser.setPassword(temp.getPassword());
-			Set<GrantedAuthority> grantedAuthorities = new HashSet<GrantedAuthority>();
-			grantedAuthorities.add(new SimpleGrantedAuthority(applicationUser.getRole().getNamaRole()));
-			return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(applicationUser.getUsername(),
-				applicationUser.getPassword(), grantedAuthorities));
+            if (optUser.isEmpty()){
+                HashMap<String, Object> data = new HashMap<>();
+        		data.put("error", "username and password doesn't match");
+
+        		String error = new ObjectMapper().writeValueAsString(data);
+                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                res.setContentType(APPLICATION_JSON_VALUE);
+                res.getWriter().write(error);
+                res.getWriter().flush();
+                return null;
+            } else {
+                UserModel applicationUser = optUser.get();
+                applicationUser.setPassword(temp.getPassword());
+                Set<GrantedAuthority> grantedAuthorities = new HashSet<GrantedAuthority>();
+                grantedAuthorities.add(new SimpleGrantedAuthority(applicationUser.getRole().getNamaRole()));
+                return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(applicationUser.getUsername(),
+                    applicationUser.getPassword(), grantedAuthorities));
+            }
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -64,12 +74,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String accessToken = JWTUtils.generateAccessToken(user);
         String refreshToken = JWTUtils.generateRefreshToken(user);
 
-        HashMap<String, Object> data = new HashMap<String, Object>();
+        HashMap<String, Object> data = new HashMap<>();
         data.put("accessToken", accessToken);
         data.put("refreshToken", refreshToken);
         data.put("role", userDetail.getAuthorities());
         String body = new ObjectMapper().writeValueAsString(data);
 
+        res.setContentType(APPLICATION_JSON_VALUE);
         res.getWriter().write(body);
         res.getWriter().flush();
     }
