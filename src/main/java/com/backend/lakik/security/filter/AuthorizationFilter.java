@@ -1,5 +1,8 @@
 package com.backend.lakik.security.filter;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,9 +18,13 @@ import javax.servlet.http.HttpServletResponse;
 import com.backend.lakik.util.JWTUtils;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
+@Slf4j
 public class AuthorizationFilter extends BasicAuthenticationFilter {
 
   	public AuthorizationFilter(AuthenticationManager authManager) {
@@ -29,30 +36,39 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 		throws IOException, ServletException {
 		String header = request.getHeader("Authorization");
 
-		if (header == null) {
-			chain.doFilter(request, response);
-			return;
+		if (header != null && header.startsWith("Bearer ")) {
+			try {
+				UsernamePasswordAuthenticationToken authentication = authenticate(request);
+
+				SecurityContextHolder.getContext().setAuthentication(authentication);
+			} catch (JWTVerificationException e) {
+				log.error(e.getMessage());
+				HashMap<String, Object> data = new HashMap<>();
+				data.put("error", "there is something wrong with the JWT");
+
+				String error = new ObjectMapper().writeValueAsString(data);
+				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				response.setContentType(APPLICATION_JSON_VALUE);
+				response.getWriter().write(error);
+				response.getWriter().flush();
+				return;
+			}
 		}
-
-		UsernamePasswordAuthenticationToken authentication = authenticate(request);
-
-		SecurityContextHolder.getContext().setAuthentication(authentication);
 		chain.doFilter(request, response);
 	}
 
 	private UsernamePasswordAuthenticationToken authenticate(HttpServletRequest request) {
 		String token = request.getHeader("Authorization");
-		if (token != null && token.length() != 0) {
-			String user = JWTUtils.decodeJWTToken(token).getSubject();
+		String user = JWTUtils.decodeJWTToken(token).getSubject();
 
-			String role = JWTUtils.decodeJWTToken(token).getClaim("role").asString();
+		String role = JWTUtils.decodeJWTToken(token).getClaim("role").asString();
 
-			if (user != null) {
-				Set<GrantedAuthority> grantedAuthorities = new HashSet<GrantedAuthority>();
-				grantedAuthorities.add(new SimpleGrantedAuthority(role));
-				return new UsernamePasswordAuthenticationToken(user, null, grantedAuthorities);
-			}
+		if (user == null) {
+			return null;
 		}
-		return null;
+
+		Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+		grantedAuthorities.add(new SimpleGrantedAuthority(role));
+		return new UsernamePasswordAuthenticationToken(user, null, grantedAuthorities);
 	}
 }
